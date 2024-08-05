@@ -1,0 +1,117 @@
+body {
+    background-color: #035000;
+    color: #333;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.container h1 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.container h3 {
+    color: #490202;
+    font-size: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.partida {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: #000;
+    margin: 10px 0;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    color: #fff;
+    position: relative;
+}
+
+.jogadores {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.jogador, .ponto, .set, .separator {
+    font-size: 1.5em;
+    margin: 0 5px;
+    text-align: center;
+}
+
+.ponto {
+    background-color: #f0e442;
+    color: #000;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.vencedor, .mesa-numero {
+    font-size: 1.2em;
+    margin-top: 10px;
+    color: #fff;
+    flex: 1;
+}
+
+.vencedor {
+    text-align: right;
+}
+
+.btn-ao-vivo {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
+
+.btn-ao-vivo a {
+    background-color: #e74c3c;
+    color: #fff;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+}
+
+.btn-ao-vivo a:hover {
+    background-color: #c0392b;
+}
+
+@media (max-width: 768px) {
+    .jogador, .ponto, .set, .separator {
+        font-size: 1.2em;
+    }
+
+    .vencedor, .mesa-numero, .btn-ao-vivo a {
+        font-size: 0.8em;
+    }
+}
+
+@media (max-width: 480px) {
+    .jogador, .ponto, .set, .separator {
+        font-size: 1em;
+    }
+
+    .vencedor, .mesa-numero, .btn-ao-vivo a {
+        font-size: 0.7em;
+    }
+}

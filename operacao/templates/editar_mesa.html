@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Editar Mesa</title>
+<link rel="stylesheet" type="text/css" href="{% static 'operacao/css/editar_mesa.css' %}">
+</head>
+<body>
+<div class="container">
+    <h1>Editar Mesa {{ mesa.id }}</h1>
+    {% if error_message %}
+        <div class="error">{{ error_message }}</div>
+    {% endif %}
+    <form method="post" action="{% url 'editar_mesa' mesa.id %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="link_transmissao">Link de Transmissão:</label>
+            <input type="url" id="link_transmissao" name="link_transmissao" value="{{ mesa.link_transmissao }}">
+        </div>
+        <div class="form-group">
+            <label for="partida_atual">Partida Atual:</label>
+            <select id="partida_atual" name="partida_atual">
+                <option value="">Nenhuma</option>
+                {% for partida in partidas %}
+                    <option value="{{ partida.id }}" {% if mesa.partida_atual and mesa.partida_atual.id == partida.id %}selected{% endif %}>
+                        {{ partida.jogador1.nome }} vs {{ partida.jogador2.nome }} - {{ partida.data_partida }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="button">Salvar</button>
+    </form>
+</div>
+</body>
+</html>

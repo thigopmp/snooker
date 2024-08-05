@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placar do Campeonato de Sinuca</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'operacao/css/placar.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function atualizarPlacar() {
+            const mesaId = {{ mesa.id }};
+            $.ajax({
+                url: `/operacao/atualizar_placar/${mesaId}/`,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('.name').eq(0).text(data.jogador1);
+                    $('.name').eq(1).text(data.jogador2);
+                    $('.separator').eq(0).text(`(${data.melhor_de})`);
+                    $('.points').eq(0).text(data.pontos_jogador1);
+                    $('.sets').eq(0).text(data.sets_jogador1);
+                    $('.points').eq(1).text(data.pontos_jogador2);
+                    $('.sets').eq(1).text(data.sets_jogador2);
+                }
+            });
+        }
+
+        setInterval(atualizarPlacar, 5000); // Atualiza a cada 10 segundos
+    </script>
+</head>
+<body>
+
+<div class="navbar-container">
+    CBBS
+</div>
+
+<div class="scoreboard">
+    <div class="team">
+        <img src="path_to_brazil_flag.jpg" alt="Brasil">
+        <div class="info">
+            <div class="name">{{ partida.jogador1.nome }}</div>
+            <div class="score-section">
+                <div class="sets">{{ partida.sets_jogador1 }}</div>
+                <div class="points">{{ partida.pontos_jogador1 }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="separator">({{ partida.melhor_de }})</div>
+    <div class="team">
+        <img src="path_to_roc_flag.jpg" alt="ROC">
+        <div class="info">
+            <div class="name">{{ partida.jogador2.nome }}</div>
+            <div class="score-section">
+                <div class="sets">{{ partida.sets_jogador2 }}</div>
+                <div class="points">{{ partida.pontos_jogador2 }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

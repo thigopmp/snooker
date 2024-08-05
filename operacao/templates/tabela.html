@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placar do Campeonato</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'operacao/css/tabela.css' %}">
+</head>
+<body>
+
+<div class="navbar-container">
+    <div class="navbar">Campeonato CBBS</div>
+</div>
+
+<div class="content">
+    <div class="title">Tabela de Jogos e Resultados</div>
+
+    <div class="key-group">
+        <div class="key-title">Chave A</div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+			<th>Data</th>
+			<th>Hora</th>
+                        <th>Mesa</th>
+                        
+                        <th>Jogador 1</th>
+                        <th>Resultado</th>
+                        <th>Jogador 2</th>
+                  
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        
+                        <td>01/06/2024</td>
+			<td>13:00</td>
+			<td>1</td>
+                        <td>Player 01</td>
+                        <td>3 - 2</td>
+                        <td>Player 02</td>
+                      
+                    </tr>
+                    <tr>
+                        
+                        <td>01/06/2024</td>
+			<td>13:00</td>
+			<td>2</td>
+                        <td>Player 03</td>
+                        <td>1 - 4</td>
+                        <td>Player 04</td>
+                    
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="key-group">
+        <div class="key-title">Chave B</div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+			<th>Hora</th>
+                        <th>Mesa</th>
+
+                        <th>Jogador 1</th>
+                        <th>Resultado</th>
+                        <th>Jogador 2</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        
+                        <td>03/06/2024</td>
+			<td>15:00</td>
+			<td>1</td>
+                        <td>Player 05</td>
+                        <td>2 - 3</td>
+                        <td>Player 06</td>
+
+                    </tr>
+                    <tr>
+                        <td>03/06/2024</td>
+			<td>15:00</td>
+			<td>2</td>
+                        <td>Player 07</td>
+                        <td>4 - 1</td>
+                        <td>Player 08</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Adicione mais grupos de chave conforme necessário -->
+
+</div>
+
+</body>
+</html>

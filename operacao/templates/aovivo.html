@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Placar Ao Vivo</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        color: white;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
+  
+    .scoreboard {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        position: relative;
+        z-index: 1;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    .team {
+        margin: 0 20px;
+        text-align: center;
+    }
+    .points {
+        margin: 0 10px;
+    }
+    .sets {
+        color: yellow;
+        margin: 0 2px;
+    }
+    .separator {
+        margin: 0 10px;
+    }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function atualizarPlacar() {
+        const mesaId = {{ mesa.id }};
+        $.ajax({
+            url: `/operacao/atualizar_placar/${mesaId}/`,
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                $('.mesa').text(mesaId);
+                $('.jogador1-nome').text(data.jogador1);
+                $('.jogador2-nome').text(data.jogador2);
+                $('.pontos-jogador1').text(data.pontos_jogador1);
+                $('.sets-jogador1').text(data.sets_jogador1);
+                $('.sets-total').text('(' + data.melhor_de + ')');
+                $('.pontos-jogador2').text(data.pontos_jogador2);
+                $('.sets-jogador2').text(data.sets_jogador2);
+                $('.current-break').text(data.tacada); // Atualiza o break
+            }
+        });
+    }
+
+    setInterval(atualizarPlacar, 5000); // Atualiza a cada 5 segundos
+</script>
+</head>
+<body>
+<div class="background"></div>
+<div class="scoreboard">
+    <div class="separator">Mesa:</div>
+    <div class="mesa">0</div>
+    <div class="team jogador1-nome">NomeJogador1</div>
+    <div class="points pontos-jogador1">0</div>
+    <div class="sets sets-jogador1">0</div>
+    <div class="sets-total">(0)</div>
+    <div class="sets sets-jogador2">0</div>
+    <div class="points pontos-jogador2">0</div>
+    <div class="team jogador2-nome">NomeJogador2</div>
+    <div class="separator">Break:</div>
+    <div class="current-break">0</div> <!-- Exibe o break atual -->
+</div>
+</body>
+</html>

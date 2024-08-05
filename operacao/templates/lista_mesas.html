@@ -1,0 +1,70 @@
+{% include 'menu.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Partidas nas Mesas</title>
+<link rel="stylesheet" type="text/css" href="{% static 'operacao/css/lista_mesas.css' %}">
+</head>
+<body>
+<div class="container">
+    <h1>Partidas nas Mesas</h1>
+    <div class="action-buttons">
+        <form method="post" action="{% url 'adicionar_mesa' %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="button">Adicionar Mesa</button>
+        </form>
+        <form method="post" action="{% url 'remover_mesa' %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="button" onclick="return confirm('Tem certeza que deseja remover esta mesa?');">Remover Última Mesa</button>
+        </form>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Mesa</th>
+                <th>Partida</th>
+                <th>Data da Partida</th>
+                <th colspan="3">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mesa in mesas %}
+                <tr>
+                    <td>{{ mesa.id }}</td>
+                    <td>
+                        {% if mesa.partida_atual %}
+                            {{ mesa.partida_atual.jogador1.nome }} vs {{ mesa.partida_atual.jogador2.nome }}
+                        {% else %}
+                            Nenhuma partida acontecendo no momento.
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if mesa.partida_atual %}
+                            {{ mesa.partida_atual.data_partida }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'editar_mesa' mesa.id %}" class="button">Editar Mesa</a>
+                    </td>
+                    <td>
+                        {% if mesa.partida_atual %}
+                            <a href="{% url 'editar_partida' mesa.partida_atual.id %}" class="button">Editar Partida</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if mesa.link_transmissao %}
+                            <a href="{{ mesa.link_transmissao }}" target="_blank" class="button ao-vivo">Ao Vivo</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

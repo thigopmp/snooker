@@ -1,0 +1,279 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #000000;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    color: #ecf0f1;
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    background-color: #094701;
+    padding: 20px 0;
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+}
+
+.scoreboard {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+.team {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 50%;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.team:nth-child(odd) {
+    background-color: #000000;
+}
+
+.team:nth-child(even) {
+    background-color: #000000;
+}
+
+.team img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-left: 20px;
+}
+
+.info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    font-size: 48px;
+    position: relative; /* Add this line */
+}
+
+.name {
+    flex: 2;
+    text-align: left;
+    font-size: 80px;
+    margin-left: 50px;
+    width: 100%;
+}
+
+.active-indicator {
+    position: absolute; /* Add this line */
+    left: 20px; /* Adjust the position */
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    border-radius: 50%;
+}
+
+.current-break {
+    font-size: 30px;
+    color: #ecf0f1;
+    text-align: center;
+    width: 150px;
+}
+
+.score-section {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 2;
+    height: 100%;
+}
+
+.points {
+    text-align: center;
+    font-size: 200px;
+    font-weight: bold;
+    width: 400px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+    border-radius: 0;
+}
+
+.sets {
+    text-align: center;
+    font-size: 80px;
+    font-weight: bold;
+    width: 150px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid yellow;
+    border-radius: 0;
+}
+
+.sets {
+    color: yellow;
+    background-color: #000000;
+}
+
+.current-score {
+    width: 150px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    font-size: 80px;
+    color: white;
+    background-color: #75251c;
+}
+
+.separator-container {
+    display: flex;
+    justify-content: right;
+    align-items: right;
+   
+}
+
+.separator {
+    font-size: 30px;
+    color: yellow;
+    text-align: center;
+    width: 150px;
+}
+
+.control-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 35%;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    padding: 10px;
+    
+}
+
+.points-container {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    border: none;
+    outline: none;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    outline: none; /* Remove qualquer outline que possa estar aparecendo */
+    border: none;
+}
+
+.section h4 {
+    margin-bottom: 0px;
+    text-align: center;
+    font-size: 18px;
+    color: #2c3e50;
+}
+
+.points {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    outline: none;
+}
+
+.points div {
+    text-align: center;
+    flex: 1;
+    border: none;
+    outline: none;
+}
+
+
+.point-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    margin: 0 auto;
+    font-weight: bold;
+    border: none; /* Assegura que não haja bordas */
+    outline: none; /* Remove qualquer outline que possa estar aparecendo */
+    cursor: pointer;
+    font-size: large;
+}
+
+.ball-points .point-button:nth-child(1) { background-color: #ff4c4c; }
+.ball-points .point-button:nth-child(2) { background-color: #f0e442; color: #000; }
+.ball-points .point-button:nth-child(3) { background-color: #2ecc71; }
+.ball-points .point-button:nth-child(4) { background-color: #a52a2a; }
+.ball-points .point-button:nth-child(5) { background-color: #3498db; }
+.ball-points .point-button:nth-child(6) { background-color: #ff69b4; color: #000; }
+.ball-points .point-button:nth-child(7) { background-color: #000; }
+.foul-points .point-button:nth-child(1) { background-color: #a52a2a; }
+.foul-points .point-button:nth-child(2) { background-color: #3498db; }
+.foul-points .point-button:nth-child(3) { background-color: #ff69b4; color: #000; }
+.foul-points .point-button:nth-child(4) { background-color: #000; }
+
+.buttons {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    padding: 10px;
+}
+
+.buttons div {
+    text-align: center;
+    flex: 1;
+}
+
+.buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: large;
+}
+
+.buttons .undo { background-color: #ffcccc; }
+.buttons .switch { background-color: #ffeb3b; }
+.buttons .end-frame { background-color: #e0e0e0; }
+
+.player-info.active .active-indicator {
+    display: flex;
+}
+
+.player-info:not(.active) .active-indicator {
+    display: none;
+}
+
+

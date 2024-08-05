@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Editar Partida</title>
+<link rel="stylesheet" type="text/css" href="{% static 'operacao/css/cadastrar_partida.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+<div class="container">
+    <h1>Editar Partida</h1>
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+    <form method="post" action="{% url 'editar_partida' partida.id %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="data_partida">Data e Hora da Partida:</label>
+            <input type="text" id="data_partida" name="data_partida" value="{{ partida.data_partida|date:'Y-m-d H:i' }}" required>
+        </div>
+        <div class="form-group">
+            <label for="jogador1">Jogador 1:</label>
+            <input type="text" id="jogador1" name="jogador1" value="{{ partida.jogador1.nome }}" required>
+        </div>
+        <div class="form-group">
+            <label for="jogador2">Jogador 2:</label>
+            <input type="text" id="jogador2" name="jogador2" value="{{ partida.jogador2.nome }}" required>
+        </div>
+        <div class="form-group">
+            <label for="sets">Quantidade de Sets:</label>
+            <input type="number" id="sets" name="sets" min="1" max="10" value="{{ partida.melhor_de }}" required>
+        </div>
+        <div class="form-group btn-container">
+            <button type="submit" class="button">Atualizar Partida</button>
+        </div>
+    </form>
+    <form action="{% url 'zerar_partida' partida.id %}" method="post" style="margin-top: 20px;">
+        {% csrf_token %}
+        <button type="submit" class="button red">Zerar Partida</button>
+    </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    flatpickr("#data_partida", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        time_24hr: true
+    });
+</script>
+</body>
+</html>

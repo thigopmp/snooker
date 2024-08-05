@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partidas em Tempo Real</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'operacao/css/real_time_partidas.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function atualizarPartidas() {
+            $.ajax({
+                url: "{% url 'atualizar_realtime_partidas' %}",
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('#partidas-container').empty();
+                    data.partidas.forEach(function(partida) {
+                        $('#partidas-container').append(`
+                            <div class="partida">
+                                <div class="mesa-numero">Mesa ${partida.mesa_id}</div>
+                                <div class="jogadores">
+                                    <span class="jogador">${partida.jogador1}</span> 
+                                    <span class="ponto">${partida.pontos_jogador1}</span> 
+                                    <span class="set">${partida.sets_jogador1}</span> 
+                                    <span class="separator">(${partida.melhor_de})</span> 
+                                    <span class="set">${partida.sets_jogador2}</span> 
+                                    <span class="ponto">${partida.pontos_jogador2}</span> 
+                                    <span class="jogador">${partida.jogador2}</span>
+                                </div>
+                                <div class="vencedor">
+                                    Vencedor: <span class="vencedor-nome">${partida.vencedor ? partida.vencedor : 'A definir'}</span>
+                                </div>
+                                ${partida.link_transmissao ? `<div class="btn-ao-vivo"><a href="${partida.link_transmissao}" target="_blank">Ao Vivo</a></div>` : ''}
+                            </div>
+                        `);
+                    });
+                }
+            });
+        }
+
+        setInterval(atualizarPartidas, 3000); // Atualiza a cada 10 segundos
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>TORNEIO DE SINUCA HANDICAP CLUBE CENTRAL NITERÓI 2024</h1>
+        <h3>Partidas em Tempo Real</h3>
+        <div id="partidas-container">
+            <!-- As partidas serão carregadas aqui via AJAX -->
+        </div>
+    </div>
+</body>
+</html>

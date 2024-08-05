@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadastrar Partida</title>
+<link rel="stylesheet" type="text/css" href="{% static 'operacao/css/cadastrar_partida.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+<div class="container">
+    <h1>Cadastrar Nova Partida</h1>
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+    <form method="post" action="{% url 'cadastrar_partida' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="data_partida">Data e Hora da Partida:</label>
+            <input type="text" id="data_partida" name="data_partida" required>
+        </div>
+        <div class="form-group">
+            <label for="jogador1">Jogador 1:</label>
+            <input type="text" id="jogador1" name="jogador1" required>
+        </div>
+        <div class="form-group">
+            <label for="jogador2">Jogador 2:</label>
+            <input type="text" id="jogador2" name="jogador2" required>
+        </div>
+        <div class="form-group">
+            <label for="sets">Quantidade de Sets:</label>
+            <input type="number" id="sets" name="sets" min="1" max="10" value="1" required>
+        </div>
+        <div class="form-group btn-container">
+            <button type="submit" class="button">Cadastrar Partida</button>
+        </div>
+    </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    flatpickr("#data_partida", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        time_24hr: true
+    });
+</script>
+</body>
+</html>

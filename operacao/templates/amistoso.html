@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Configuração de Jogo Amistoso</title>
+<link rel="stylesheet" type="text/css" href="{% static 'operacao/css/amistoso.css' %}">
+</head>
+<body>
+<div class="container">
+    <h1>Configuração de Jogo Amistoso</h1>
+    <form action="/operacao/start_game/" method="post">
+        {% csrf_token %}
+        <label for="jogador1">Jogador 1:</label>
+        <input type="text" id="jogador1" name="jogador1" required>
+        <label for="jogador2">Jogador 2:</label>
+        <input type="text" id="jogador2" name="jogador2" required>
+        <label for="sets">Quantidade de Sets:</label>
+        <input type="number" id="sets" name="sets" min="1" max="10" value="1" required>
+        <label for="mesa">Número da Mesa:</label>
+        <input type="number" id="mesa" name="mesa" min="1" max="10" value="1" required>
+        <button type="submit">Iniciar Jogo</button>
+    </form>
+</div>
+</body>
+</html>

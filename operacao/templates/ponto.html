@@ -1,0 +1,270 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snooker Scoreboard</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'operacao/css/ponto.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        let activePlayer = 1;
+        let partidaId = {{ mesa.partida_atual.id }};
+        let currentBreakPoints = 0;
+
+        function atualizarPlacar() {
+            atualizarPartidaId()
+            const mesaId = {{ mesa.id }};
+            $.ajax({
+                url: `/operacao/atualizar_placar/${mesaId}/`,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('.player-info').eq(0).find('.name').text(data.jogador1);
+                    $('.player-info').eq(1).find('.name').text(data.jogador2);
+                    $('.current-score').eq(0).text(data.pontos_jogador1);
+                    $('.sets').eq(0).text(data.sets_jogador1);
+                    $('.current-score').eq(1).text(data.pontos_jogador2);
+                    $('.sets').eq(1).text(data.sets_jogador2);
+                    $('.separator').text('(' + data.melhor_de + ')');
+                    $('.current-break').text(data.tacada);
+                }
+            });
+        }
+        setInterval(atualizarPlacar, 5000); // Atualiza a cada 10 segundos
+        function atualizarPartidaId() {
+            const mesaId = {{ mesa.id }};
+            $.ajax({
+                url: `/operacao/obter_partida_atual/${mesaId}/`,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    if (data.partida_id) {
+                        partidaId = data.partida_id;
+                    }
+                    if (activePlayer !== 1 && activePlayer !== 2) {
+                        activePlayer = 1;
+                        updateActivePlayerDisplay();
+                    }
+                }
+            });
+        }
+
+        setInterval(atualizarPartidaId, 10000); // Atualiza a cada 10 segundos
+
+        function switchPlayer() {
+            activePlayer = activePlayer === 1 ? 2 : 1;
+            currentBreakPoints = 0;  // Reset break points on player switch
+
+            // Chama a função para resetar a tacada
+            resetTacada(partidaId).done(function() {
+                updateActivePlayerDisplay();
+                atualizarPlacar();
+            });
+        }
+        function resetTacada(partidaId) {
+            return $.ajax({
+                url: "{% url 'reset_tacada' %}",
+                type: 'POST',
+                data: {
+                    'partida_id': partidaId,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(data) {
+                    if (data.status === 'success') {
+                        console.log("Tacada resetada com sucesso");
+                    } else {
+                        console.log("Falha ao resetar tacada: ", data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log("Erro ao resetar tacada: ", error);
+                }
+            });
+        }
+
+        function updateActivePlayerDisplay() {
+            if (activePlayer !== 1 && activePlayer !== 2) {
+                activePlayer = 1;
+            }
+            if (activePlayer === 1) {
+                $('.player-info').eq(0).addClass('active');
+                $('.player-info').eq(1).removeClass('active');
+            } if (activePlayer === 2) {
+                $('.player-info').eq(1).addClass('active');
+                $('.player-info').eq(0).removeClass('active');
+            }
+        }
+
+        $(document).ready(function() {
+            // Set default active player on page load
+            updateActivePlayerDisplay();
+            atualizarPlacar();
+
+            $('.switch').click(function() {
+                switchPlayer();
+            });
+
+            $('.point-button').click(function() {
+                let points = parseInt($(this).text());
+                let isFoul = $(this).parent().parent().hasClass('foul-points');
+                addPoints(activePlayer, points, isFoul);
+            });
+
+            $('.end-frame').click(function() {
+                endFrame();
+            });
+            $('.undo').click(function() {
+                undoLastAction();
+            });
+        });
+
+        function addPoints(activePlayer, points, isFoul) {
+            atualizarPartidaId();
+            let falta = 0;
+            if (isFoul) {
+                activePlayer = activePlayer === 1 ? 2 : 1;
+                falta = 1;
+            } else {
+                currentBreakPoints += points;  // Add to break points
+            }
+            
+            $.ajax({
+                url: "{% url 'adicionar_pontos' %}",
+                type: 'POST',
+                data: {
+                    'partida_id': partidaId,
+                    'falta': falta,
+                    'player': activePlayer,
+                    'points': points,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(data) {
+                    atualizarPlacar();
+                }
+            });
+        }
+
+        function undoLastAction() {
+            $.ajax({
+                url: "{% url 'desfazer_ultima_acao' %}",
+                type: 'POST',
+                data: {
+                    'partida_id': partidaId,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(data) {
+                    if (data.status === 'success') {
+                        currentBreakPoints = data.currentBreakPoints;  // Atualiza o break points
+                        atualizarPlacar();
+                    }
+                }
+            });
+        }
+
+        function endFrame() {
+            // Exibir uma caixa de diálogo de confirmação
+            if (confirm('Tem certeza que deseja encerrar o set?')) {
+                // Função para encerrar o frame
+                $.ajax({
+                    url: "{% url 'encerrar_frame' %}",
+                    type: 'POST',
+                    data: {
+                        'partida_id': partidaId,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(data) {
+                        if (data.status === 'success') {
+                            // Chama a função para resetar a tacada
+                            resetTacada(partidaId).done(function() {
+                                atualizarPartidaId();
+                                updateActivePlayerDisplay();
+                                atualizarPlacar();
+                            });
+                            currentBreakPoints = 0;
+                            if (data.vencedor_id) {
+                                alert('Vencedor do frame: ' + data.vencedor_id);
+                            }
+                        }
+                    }
+                });
+            } else {
+                // Ação cancelada pelo usuário
+                console.log('Encerramento do set cancelado');
+            }
+        }
+
+    </script>
+</head>
+<body>
+
+<div class="container">
+    <div class="scoreboard">
+        <div class="navbar-container">
+            <div class="navbar">TORNEIO DE SINUCA HANDICAP CLUBE CENTRAL NITERÓI 2024</div>
+        </div>
+        <div class="team player-info">
+            
+            <div class="info">
+                <div class="name">{{ mesa.partida_atual.jogador1.nome }}</div>
+                <div class="active-indicator"></div>
+                <div class="score-section">
+                    <div class="sets">{{ mesa.partida_atual.sets_jogador1 }}</div>
+                    <div class="current-score">{{ mesa.partida_atual.pontos_jogador1 }}</div>
+                </div>
+                
+            </div>
+        </div>
+        <div class="separator-container">
+            <div class="separator">({{ mesa.partida_atual.melhor_de }})</div>
+            <div class="current-break">{{ mesa.partida_atual.sets.last.tacada }}</div>
+        </div>
+        <div class="team player-info">
+            
+            <div class="info">
+                <div class="name">{{ mesa.partida_atual.jogador2.nome }}</div>
+                <div class="active-indicator"></div>
+                <div class="score-section">
+                    <div class="sets">{{ mesa.partida_atual.sets_jogador2 }}</div>
+                    <div class="current-score">{{ mesa.partida_atual.pontos_jogador2 }}</div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <div class="control-panel">
+        <div class="points-container">
+            <div class="section">
+                <h4>Pontos</h4>
+                <div class="points ball-points">
+                    <div><button class="point-button" style="background-color: #ff4c4c;">+1</button></div>
+                    <div><button class="point-button" style="background-color: #f0e442; color: #000;">+2</button></div>
+                    <div><button class="point-button" style="background-color: #2ecc71;">+3</button></div>
+                    <div><button class="point-button" style="background-color: #a52a2a;">+4</button></div>
+                    <div><button class="point-button" style="background-color: #3498db;">+5</button></div>
+                    <div><button class="point-button" style="background-color: #ff69b4; color: #000;">+6</button></div>
+                    <div><button class="point-button" style="background-color: #000;">+7</button></div>
+                </div>
+            </div>
+            <div class="section">
+                <h4>Faltas</h4>
+                <div class="points foul-points">
+                    <div><button class="point-button" style="background-color: #a52a2a;">+4</button></div>
+                    <div><button class="point-button" style="background-color: #3498db;">+5</button></div>
+                    <div><button class="point-button" style="background-color: #ff69b4; color: #000;">+6</button></div>
+                    <div><button class="point-button" style="background-color: #000;">+7</button></div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="buttons">
+                <div><button class="undo">Desfazer</button></div>
+                <div><button class="switch">Trocar jogador</button></div>
+                <div><button class="end-frame">Terminar o set</button></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

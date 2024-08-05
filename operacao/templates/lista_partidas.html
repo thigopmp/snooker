@@ -1,0 +1,63 @@
+{% include 'menu.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lista de Partidas</title>
+<link rel="stylesheet" type="text/css" href="{% static 'operacao/css/lista_partidas.css' %}">
+<script>
+    function confirmarExclusao(jogador1, jogador2, form) {
+        var confirmacao = confirm(`Tem certeza que deseja excluir a partida entre ${jogador1} e ${jogador2}?`);
+        if (confirmacao) {
+            form.submit();
+        }
+    }
+</script>
+</head>
+<body>
+<div class="container">
+    <h1>Lista de Partidas</h1>
+    <div class="btn-cadastrar">
+        <a href="/operacao/cadastrar_partida">Cadastrar Partida</a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Jogador 1</th>
+                <th>Jogador 2</th>
+                <th>Data da Partida</th>
+                <th>Mesa</th>
+                <th>Melhor de</th>
+                <th>Vencedor</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for partida in partidas %}
+                <tr>
+                    <td>{{ partida.jogador1.nome }}</td>
+                    <td>{{ partida.jogador2.nome }}</td>
+                    <td>{{ partida.data_partida }}</td>
+                    <td>{% if partida.mesa %} {{ partida.mesa.id }}{% else %}Nenhuma{% endif %}</td>
+                    <td>{{ partida.melhor_de }}</td>
+                    <td>{% if partida.vencedor %} {{ partida.vencedor.nome }} {% else %}Ainda não decidido{% endif %}</td>
+                    <td>
+                        <a href="{% url 'editar_partida' partida.id %}" class="button">Editar</a>
+                        <form method="post" action="{% url 'zerar_partida' partida.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="button">Zerar</button>
+                        </form>
+                        <form method="post" action="{% url 'excluir_partida' partida.id %}" style="display:inline;" onsubmit="event.preventDefault(); confirmarExclusao('{{ partida.jogador1.nome }}', '{{ partida.jogador2.nome }}', this);">
+                            {% csrf_token %}
+                            <button type="submit" class="button excluir-button">Excluir</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
